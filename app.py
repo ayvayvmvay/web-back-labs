@@ -9,14 +9,18 @@ def not_found(err):
 @app.route("/")
 @app.route("/web")
 
-def start():    
-    
-    return "<!doctype html>"\
-        "<html>"\
-        "   <body>"\
-        "       <h1>web-сервер на flask</h1>"\
-        "   </body>"\
-        "</html>"
+@app.route("/web")
+def web():
+    return """<!doctype html> 
+        <html>
+            <body>
+                <h1>web-сервер на flask</h1>
+                <a href="/author">author</a>
+            </body>
+        </html>""", 200, {
+            "X-Server": "sample",
+            'Content-Type': 'text/plain; charset=utf-8'
+            }
 
 
 @app.route("/author")
@@ -77,7 +81,7 @@ def info():
 
 @app.route("/created")
 def created():
-    return '''git commit -m "код 201"
+    return '''
 <!doctype html"
 <html>
     <body>
@@ -86,4 +90,7 @@ def created():
     </body>
 </html>
 ''',201
+
+
+
 
