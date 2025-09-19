@@ -46,8 +46,6 @@ def image():
     img = url_for('static', filename='oak.jpg')
     html = f'''<!doctype html>
 
-
-
 <html>
     <head>
         <meta charset="utf-8">
@@ -62,27 +60,38 @@ def image():
     return html
 
 
+count = 0
+
 
 count = 0
 @app.route('/counter')
 def counter():
     global count
-    count +=1
+    count += 1
     time = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S")
     url = request.url
     client_ip = request.remote_addr 
-    return '''
+    clear_url = url_for('clear_counter')
+    return f'''
 <!doctype html>
 <html>
+    <head><title>Счётчик</title></head>
     <body>
-        Сколько раз вы сюда заходили: ''' + str(count) + '''
+        Сколько раз вы сюда заходили: {count}
         <hr>
-        Дата и время: ''' + time + ''' <br>
-        Запрошенный адрес: ''' + url + ''' <br>
-        Ваш IP-адрес: ''' + client_ip + ''' <br>
+        Дата и время: {time} <br>
+        Запрошенный адрес: {url} <br>
+        Ваш IP-адрес: {client_ip} <br>
+        <p><a href="{clear_url}">Очистить счётчик</a></p>
     </body>
 </html>
 '''
+
+@app.route('/counter/clear')
+def clear_counter():
+    global count
+    count = 0
+    return redirect(url_for('counter'))
 
 @app.route("/info")
 def info():
