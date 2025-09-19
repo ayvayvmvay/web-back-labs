@@ -85,7 +85,7 @@ def author():
             <body>
                 <p>Студент: """ + name + """</p>
                 <p>Группа: """ + group + """</p>
-                <p>Факультет: """ + faculty + """</p>
+                <p>Факультет: """ + faculty + """</sp>
                 <a href="/web">web</a>
             </body>
         </html>"""
@@ -243,34 +243,64 @@ def teapot():
 </body>
 </html>''', 418
 
+
+ournal = []
+
+journal = []
+
 @app.errorhandler(404)
 def not_found(err):
     img = url_for('static', filename='404.png')
+    time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    ip = request.remote_addr
+    url = request.url
+
+    entry = f"{time} — {ip} — {url}"
+    journal.append(entry)
+
+    log_html = "<h3>Журнал:</h3><ul>"
+    for record in journal[-10:]:
+        log_html += f"<li>{record}</li>"
+    log_html += "</ul>"
+
+    img = url_for('static', filename='404.png')
+
+
     return f'''<!doctype html>
 <html>
-<head><meta charset="utf-8"><title>Ошибка 404</title>
-<style>
-  body {{
-    background: white;
-    color: black;
-    font-family:Arial;
-    text-align:center;
-    padding:40px
-    }}
-  h1 {{
-    color:#ff6b6b
-    }}
-  img {{
-    width:300px;
-    margin-top:20px
-    }}
-</style>
+<head>
+    <meta charset="utf-8">
+    <title>Ошибка 404</title>
+    <style>
+      body {{
+        background: white;
+        color: black;
+        font-family: Arial;
+        text-align: center;
+        padding: 40px;
+      }}
+      h1 {{
+        color: black;
+      }}
+      img {{
+        width: 250px;
+        margin: 20px;
+      }}
+      .journal {{
+        text-align: left;
+        margin-top: 30px;
+      }}
+    </style>
 </head>
 <body>
-  <h1>Страница не найдена (404)</h1>
-  <p>Такой страницы нет.</p>
-  <img src="{img}" alt="404">
-  <p><a href="/">Вернуться на главную</a></p>
+     <h1>Страница не найдена</h1>
+    <p><b>Ваш IP:</b> {ip}</p>
+    <p><b>Дата и время:</b> {time}</p>
+    <p><a href="/">Вернуться на главную</a></p>
+      <img src="{img}" alt="404">
+    <div class="journal">
+        {log_html}
+    </div>
 </body>
 </html>''', 404
 
@@ -279,6 +309,8 @@ def not_found(err):
 @app.route('/cause_500')
 def cause_500():
     raise RuntimeError("Ошибка для проверки 500")
+
+
 
 @app.errorhandler(500)
 def handle_500(err):
