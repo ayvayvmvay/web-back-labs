@@ -7,15 +7,14 @@ def not_found(err):
     return "Нет такой страницы", 404
 
 @app.route("/")
-@app.route("/web")
 
-@app.route("/web")
+@app.route("/lab1/web")
 def web():
     return """<!doctype html> 
         <html>
             <body>
                 <h1>web-сервер на flask</h1>
-                <a href="/author">author</a>
+                <a href="/lab1/author">author</a>
             </body>
         </html>""", 200, {
             "X-Server": "sample",
@@ -23,7 +22,7 @@ def web():
             }
 
 
-@app.route("/author")
+@app.route("/lab1/author")
 def author():
     name = "Шевченко Иван Юрьевич"
     group = "ФБИ-34"
@@ -40,7 +39,7 @@ def author():
         </html>"""
 
 
-@app.route('/image')
+@app.route('/lab1/image')
 def image():
     css = url_for('static', filename='lab1.css')
     img = url_for('static', filename='oak.jpg')
@@ -64,7 +63,7 @@ count = 0
 
 
 count = 0
-@app.route('/counter')
+@app.route('/lab1/counter')
 def counter():
     global count
     count += 1
@@ -87,17 +86,17 @@ def counter():
 </html>
 '''
 
-@app.route('/counter/clear')
+@app.route('/lab1/counter/clear')
 def clear_counter():
     global count
     count = 0
     return redirect(url_for('counter'))
 
-@app.route("/info")
+@app.route("/lab1/info")
 def info():
-    return redirect("/author")
+    return redirect("/lab1/author")
 
-@app.route("/created")
+@app.route("/lab1/created")
 def created():
     return '''
 <!doctype html"
