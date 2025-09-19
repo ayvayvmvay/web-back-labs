@@ -24,16 +24,39 @@ def index():
 </html>'''
 
 @app.route('/lab1')
+
+
 def lab1():
     return '''<!doctype html>
 <html>
-    <head><title>Лабораторная 1</title></head>
-    <body>
-        <p>Flask — фреймворк для создания веб-приложений на языке программирования Python, использующий набор инструментов Werkzeug, 
-        а также шаблонизатор Jinja2. Относится к категории так называемых микрофреймворков — минималистичных каркасов веб-приложений, 
-        сознательно предоставляющих лишь самые базовые возможности.</p>
-        <p><a href="/">На корень сайта</a></p>
-    </body>
+<head><meta charset="utf-8"><title>Лабораторная 1</title></head>
+<body>
+    <h1>Лабораторная 1</h1>
+    <p>Flask — фреймворк для создания веб-приложений на языке программирования Python, использующий набор инструментов Werkzeug, 
+    а также шаблонизатор Jinja2. Относится к категории так называемых микрофреймворков — минималистичных каркасов веб-приложений, 
+    сознательно предоставляющих лишь самые базовые возможности.</p>
+    <p><a href="/">На корень сайта</a></p>
+    <h2>Список роутов</h2>
+    <ul>
+        <li><a href="/">Главная страница</a></li>
+        <li><a href="/index">Index</a></li>
+        <li><a href="/lab1/web">/lab1/web</a></li>
+        <li><a href="/lab1/author">/lab1/author</a></li>
+        <li><a href="/lab1/image">/lab1/image</a></li>
+        <li><a href="/lab1/counter">/lab1/counter</a></li>
+        <li><a href="/lab1/counter/clear">/lab1/counter/clear</a></li>
+        <li><a href="/lab1/info">/lab1/info</a></li>
+        <li><a href="/lab1/created">/lab1/created</a></li>
+        <li><a href="400">400 Bad Request</a></li>
+        <li><a href="401">401 Unauthorized</a></li>
+        <li><a href="402">402 Payment Required</a></li>
+        <li><a href="403">403 Forbidden</a></li>
+        <li><a href="404">Страница не найдена (404)</a></li>
+        <li><a href="405">405 Method Not Allowed</a></li>
+        <li><a href="418">418 I'm a teapot</a></li>
+        <li><a href="/cause_500">Внутренняя ошибка сервера (500)</a></li>
+    </ul>
+</body>
 </html>'''
 
 
