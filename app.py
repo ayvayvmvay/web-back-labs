@@ -2,10 +2,6 @@ from flask import Flask, url_for, request, redirect
 import datetime
 app = Flask(__name__)
 
-@app.errorhandler(404)
-def not_found(err):
-    return "Нет такой страницы", 404
-
 @app.route('/')
 @app.route('/index')
 def index():
@@ -219,4 +215,33 @@ def teapot():
 </body>
 </html>''', 418
 
-
+@app.errorhandler(404)
+def not_found(err):
+    img = url_for('static', filename='404.png')
+    return f'''<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Ошибка 404</title>
+<style>
+  body {{
+    background: white;
+    color: black;
+    font-family:Arial;
+    text-align:center;
+    padding:40px
+    }}
+  h1 {{
+    color:#ff6b6b
+    }}
+  img {{
+    width:300px;
+    margin-top:20px
+    }}
+</style>
+</head>
+<body>
+  <h1>Страница не найдена (404)</h1>
+  <p>Такой страницы нет.</p>
+  <img src="{img}" alt="404">
+  <p><a href="/">Вернуться на главную</a></p>
+</body>
+</html>''', 404
