@@ -1,4 +1,4 @@
-from flask import Flask, url_for, request, redirect
+from flask import Flask, url_for, request, redirect, abort
 import datetime
 app = Flask(__name__)
 
@@ -323,3 +323,29 @@ def handle_500(err):
   <a href="/">На главную</a>
 </body>
 </html>''', 500 
+
+# laba2
+@app.route('/lab2/a')
+def a() :
+    return 'без слеша'
+
+@app.route('/lab2/a/')
+def a2() :
+    return 'со слешем'
+
+
+flower_list = ['василек', 'георгин', 'тюльпан', 'роза']
+
+@app.route('/lab2/add_flower/<name>')
+def add_flower(name):
+    flower_list.append(name)
+    return f'''
+<!doctype html>
+<html>
+    <body>
+    <h1>Добавлен новый цветок</h1>
+    <p>Название нового цветка: {name} </p>
+    <p>Всего цветов: {len(flower_list)}</p>
+    <p>Полный список: {flower_list}</p>
+    </body>
+</html>'''
