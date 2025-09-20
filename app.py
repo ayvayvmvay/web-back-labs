@@ -365,3 +365,6 @@ course=course, fruits=fruits)
 
 
 
+@app.route('/lab2/')
+def lab2():
+    return render_template('lab2.html')
