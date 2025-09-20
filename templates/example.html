@@ -4,10 +4,11 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Иван Шевченко. Лабораторная работа {{lab_numb}}</title>
+        <link rel="stylesheet" hrev="{{url_for('static', filename='main.css')}}">
     </head>
     <body>
         <header>
-            WEB-программирование, часть 2. Лабораторная работа {{lab_numb}}
+            WEB-программирование, часть 2. {% if lab_numb %}Лабораторная работа {% endif %}
         </header>
         <main>
             5+2 = {{5+2}}<br>
@@ -16,7 +17,13 @@
             45**8= {{45**8}}<br>
         </main>
         <footer>
-            &copy; {{name}}, ФБИ-{{group}}, {{curs}} курс, 2025|
+            &copy;
+            {% if name %}
+                {{ name }},
+            {% else %}
+                Анонимус,
+            {% endif %}
+                {{group }}.
         </footer>
     </body>
 </html>
