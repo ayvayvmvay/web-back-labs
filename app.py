@@ -114,7 +114,7 @@ def image():
     headers = {
         'Content-Language': 'ru',
         'X-Project': 'lab1',
-        'X-Author': 'Volkov'
+        'X-Author': 'Shevchenko'
     }
     return html, 200, headers
 
@@ -250,7 +250,7 @@ journal = []
 
 @app.errorhandler(404)
 def not_found(err):
-    img = url_for('static', filename='404.png')
+    img = url_for('static', filename='404.jpg')
     time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     ip = request.remote_addr
     url = request.url
@@ -263,7 +263,7 @@ def not_found(err):
         log_html += f"<li>{record}</li>"
     log_html += "</ul>"
 
-    img = url_for('static', filename='404.png')
+    img = url_for('static', filename='404.jpg')
 
 
     return f'''<!doctype html>
@@ -322,4 +322,4 @@ def handle_500(err):
   <p>Произошла ошибка. Попробуйте позже.</p>
   <a href="/">На главную</a>
 </body>
-</html>''', 500
+</html>''', 500 
