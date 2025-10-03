@@ -3,11 +3,19 @@
 {% block lab %}Лабораторная работа 2{% endblock %}
 
 {% block main %}
-    <h1>Шаблоны</h1>
-    <div>Тема лабораторной - шаблоны. Список сделанных страниц:</div>
-    <ol>
-        <li>
-            <a href="/lab2/example">example</a>
-        </li>
-    </ol>
+    <h1>Лабораторная работа №2</h1>
+    <div>Тема лабораторной — Шаблоны. Список сделанных страниц:</div>
+
+    <ul>
+        <li><a href="{{ url_for('all_flowers') }}">/lab2/flowers</a> — список всех цветов</li>
+        <li><a href="{{ url_for('add_flower_no_name') }}">/lab2/add_flower/</a> — ошибка 400 (нет имени)</li>
+        <li><a href="{{ url_for('flowers', flower_id=0) }}">/lab2/flowers/0</a> — информация о цветке</li>
+        <li><a href="{{ url_for('clear_flowers') }}">/lab2/flowers/clear</a> — очистить список цветов</li>
+
+        <li><a href="{{ url_for('calc_default') }}">/lab2/calc/</a> — калькулятор (по умолчанию 1 и 1)</li>
+
+        <li><a href="{{ url_for('books_list') }}">/lab2/books</a> — список книг</li>
+
+        <li><a href="{{ url_for('vegetables_gallery') }}">/lab2/vegetables</a> — галерея овощей</li>
+    </ul>
 {% endblock %}
