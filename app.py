@@ -337,66 +337,38 @@ def a2() :
     return 'со слешем'
 
 
-flower_list = ['василек', 'георгин', 'тюльпан', 'роза']
+flower_list = [
+    {"name": "роза", "price": 100},
+    {"name": "тюльпан", "price": 70},
+    {"name": "незабудка", "price": 50},
+    {"name": "ромашка", "price": 40},
+]
+@app.route('/lab2/add_flower/')
+def add_flower_post():
+    name = request.form.get("name")
+    price = request.form.get("price")
+    if not name or not price:
+        return "Ошибка: не заданы имя или цена", 400
+    flower_list.append({"name": name, "price": int(price)})
+    return redirect("/lab2/flowers/")
 
 @app.route('/lab2/add_flower/')
 def add_flower_no_name():
-    return 'вы не задали имя цветка', 400
-
-
-@app.route('/lab2/add_flower/<name>')
-def add_flower(name):
-    flower_list.append(name)
-    return f'''
-    <!doctype html>
-    <html>
-        <body>
-            <h1>Добавлен новый цветок</h1>
-            <p>Название нового цветка: {name}</p>
-            <p>Всего цветов: {len(flower_list)}</p>
-            <p>Полный список: {flower_list}</p>
-            <p><a href="/lab2/flowers/">Посмотреть все цветы</a></p>
-        </body>
-    </html>
-    '''
+    return "вы не задали имя цветка", 400
 
 @app.route('/lab2/flowers/')
 def all_flowers():
-    flowers_html = '<ul>'
-    for f in flower_list:
-        flowers_html += f'<li>{f}</li>'
-    flowers_html += '</ul>'
-    return f'''
-    <!doctype html>
-    <html>
-        <head><meta charset="utf-8"><title>Все цветы</title></head>
-        <body>
-            <h1>Список всех цветов</h1>
-            {flowers_html}
-            <p>Всего цветов: {len(flower_list)}</p>
-            <p><a href="/lab2/">Назад к лабораторной</a></p>
-        </body>
-    </html>
-    '''
+    return render_template("flowers.html", flowers=flower_list)
 
 
-@app.route('/lab2/flowers/<int:flower_id>')
-def flowers(flower_id):
+
+
+@app.route('/lab2/flowers/delete/<int:flower_id>')
+def delete_flower(flower_id):
     if flower_id >= len(flower_list):
         abort(404)
-    flower = flower_list[flower_id]
-    return f'''
-   <!doctype html>
-    <html>
-        <head><meta charset="utf-8"><title>{flower}</title></head>
-        <body>
-            <h1>Цветок: {flower}</h1>
-            <p>Индекс: {flower_id}</p>
-            <p><a href="/lab2/flowers/">Посмотреть все цветы</a></p>
-        </body>
-    </html>
-    '''
-
+    flower_list.pop(flower_id)
+    return redirect('/lab2/flowers/')
 # @app.route('/lab2/flowers/clear')
 # def clear_flowers():
 #     flower_list.clear()
