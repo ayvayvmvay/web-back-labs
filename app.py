@@ -480,3 +480,29 @@ books = [
 def books_list():
     return render_template('books.html', books=books)
 
+vegetables = [
+    {"name": "Картофель", "desc": "Крупный молодой картофель", "img": "potato.jpg"},
+    {"name": "Морковь", "desc": "Сладкая хрустящая морковь", "img": "carrot.jpg"},
+    {"name": "Свёкла", "desc": "Сочная свёкла насыщенного цвета", "img": "beet.jpg"},
+    {"name": "Капуста", "desc": "Белокочанная капуста", "img": "cabbage.jpg"},
+    {"name": "Огурец", "desc": "Свежий зелёный огурец", "img": "cucumber.jpg"},
+    {"name": "Помидор", "desc": "Спелый красный томат", "img": "tomato.jpg"},
+    {"name": "Перец", "desc": "Болгарский перец яркого цвета", "img": "pepper.jpg"},
+    {"name": "Баклажан", "desc": "Глянцевый фиолетовый баклажан", "img": "eggplant.jpg"},
+    {"name": "Лук", "desc": "Золотистый репчатый лук", "img": "onion.jpg"},
+    {"name": "Чеснок", "desc": "Ароматный свежий чеснок", "img": "garlic.jpg"},
+    {"name": "Кабачок", "desc": "Молодой светло-зелёный кабачок", "img": "zucchini.jpg"},
+    {"name": "Брокколи", "desc": "Плотные соцветия брокколи", "img": "broccoli.jpg"},
+    {"name": "Цветная капуста", "desc": "Нежная белая цветная капуста", "img": "cauliflower.jpg"},
+    {"name": "Редис", "desc": "Хрустящий розовый редис", "img": "radish.jpg"},
+    {"name": "Тыква", "desc": "Крупная ярко-оранжевая тыква", "img": "pumpkin.jpg"},
+    {"name": "Кукуруза", "desc": "Сладкая кукуруза в початках", "img": "corn.jpg"},
+    {"name": "Сельдерей", "desc": "Зелёный черешковый сельдерей", "img": "celery.jpg"},
+    {"name": "Петрушка", "desc": "Свежая зелёная петрушка", "img": "parsley.jpg"},
+    {"name": "Укроп", "desc": "Ароматный пучок укропа", "img": "dill.jpg"},
+    {"name": "Шпинат", "desc": "Свежие зелёные листья шпината", "img": "spinach.jpg"}
+]
+
+@app.route('/lab2/vegetables')
+def vegetables_gallery():
+    return render_template('vegetables.html', vegetables=vegetables)
