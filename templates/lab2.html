@@ -7,15 +7,15 @@
     <div>Тема лабораторной — Шаблоны. Список сделанных страниц:</div>
 
     <ul>
-        <li><a href="{{ url_for('all_flowers') }}">/lab2/flowers</a> — список всех цветов</li>
-        <li><a href="{{ url_for('add_flower_no_name') }}">/lab2/add_flower/</a> — ошибка 400 (нет имени)</li>
-        <li><a href="{{ url_for('flowers', flower_id=0) }}">/lab2/flowers/0</a> — информация о цветке</li>
-        <li><a href="{{ url_for('clear_flowers') }}">/lab2/flowers/clear</a> — очистить список цветов</li>
+        <li><a href="{{ url_for('lab2.all_flowers') }}">/lab2/flowers</a> — список всех цветов</li>
+        <li><a href="{{ url_for('lab2.add_flower_no_name') }}">/lab2/add_flower/</a> — ошибка 400 (нет имени)</li>
+        <li><a href="{{ url_for('lab2.clear_flowers') }}">/lab2/flowers/clear</a> — очистить список цветов</li>
+        <li><a href="{{ url_for('lab2.calc_default') }}">/lab2/calc/</a> — калькулятор (по умолчанию 1 и 1)</li>
 
-        <li><a href="{{ url_for('calc_default') }}">/lab2/calc/</a> — калькулятор (по умолчанию 1 и 1)</li>
+        <li><a href="{{ url_for('lab2.books_list') }}">/lab2/books</a> — список книг</li>
+        <li><a href="{{ url_for('lab2.filters') }}">/lab2/filters</a> — фильтры</li>
 
-        <li><a href="{{ url_for('books_list') }}">/lab2/books</a> — список книг</li>
+        <li><a href="{{ url_for('lab2.vegetables_gallery') }}">/lab2/vegetables</a> — галерея овощей</li>
 
-        <li><a href="{{ url_for('vegetables_gallery') }}">/lab2/vegetables</a> — галерея овощей</li>
     </ul>
 {% endblock %}
