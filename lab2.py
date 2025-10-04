@@ -3,8 +3,6 @@ from flask import Blueprint, url_for, redirect, request, abort, render_template
 lab2 = Blueprint('lab2', __name__)
 @lab2.route('/lab2/a')
 
-
-
 # laba2
 def a() :
     return 'без слеша'
@@ -12,7 +10,6 @@ def a() :
 @lab2.route('/lab2/a/')
 def a2() :
     return 'со слешем'
-
 
 flower_list = [
     {"name": "роза", "price": 100},
