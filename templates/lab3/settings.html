@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная работа 3{% endblock %}
+
+{% block main %}
+    <h1>Cookies</h1>
+
+    <form method="get" action="/lab3/settings">
+        <div>
+            <label for="color">Цвет текста:</label>
+            <input type="color" id="color" name="color" value="{{ color or '#000000' }}">
+        </div>
+        <br>
+
+        <div>
+            <label for="bg_color">Цвет фона:</label>
+            <input type="color" id="bg_color" name="bg_color" value="{{ bg_color or '#ffffff' }}">
+        </div>
+        <br>
+
+        <div>
+            <label for="font_size">Размер шрифта:</label>
+            <input type="number" id="font_size" name="font_size" min="10" max="40" value="{{ font_size or '16' }}"> px
+        </div>
+        <br>
+
+        <div>
+            <label for="font_style">Стиль шрифта:</label>
+            <select id="font_style" name="font_style">
+                <option value="normal" {% if font_style == 'normal' %}selected{% endif %}>Обычный</option>
+                <option value="italic" {% if font_style == 'italic' %}selected{% endif %}>Курсив</option>
+            </select>
+        </div>
+        <br>
+
+        <button type="submit">Сохранить</button>
+    </form>
+{% endblock %}
