@@ -6,7 +6,8 @@
     <h2>Оплата заказа</h2>
     <p>Сумма к оплате: <strong>{{ price }} ₽</strong></p>
 
-    <form action="/lab3/success" method="post">
+    <form action="/lab3/success" method="get">
+
         <input type="hidden" name="price" value="{{ price }}">
         <div>
             <label>Номер карты:</label><br>

@@ -180,3 +180,64 @@ def clear_settings():
     resp.delete_cookie('font_size')
     resp.delete_cookie('font_style')
     return resp
+
+products = [
+    {"name": "iPhone 11", "price": 30990, "weight": "194g", "color": "черный"},
+    {"name": "iPhone 12", "price": 38990, "weight": "164g", "color": "белый"},
+    {"name": "iPhone 13", "price": 40990, "weight": "174g", "color": "синий"},
+    {"name": "iPhone 14", "price": 43990, "weight": "172g", "color": "красный"},
+    {"name": "iPhone 14 Plus", "price": 55990, "weight": "203g", "color": "черный"},
+    {"name": "iPhone 14 Pro", "price": 70990, "weight": "204g", "color": "серебро"},
+    {"name": "iPhone 14 Pro Max", "price": 80990, "weight": "240g", "color": "зеленый"},
+    {"name": "iPhone 15", "price": 48990, "weight": "171g", "color": "белый"},
+    {"name": "iPhone 15 Plus", "price": 55990, "weight": "201g", "color": "черный"},
+    {"name": "iPhone 15 Pro", "price": 79990, "weight": "187g", "color": "красный"},
+    {"name": "iPhone 15 Pro Max", "price": 94990, "weight": "221g", "color": "синий"},
+    {"name": "iPhone 16e", "price": 51990, "weight": "190g", "color": "золотой"},
+    {"name": "iPhone 16", "price": 57990, "weight": "198g", "color": "серебро"},
+    {"name": "iPhone 16 Plus", "price": 65990, "weight": "212g", "color": "черный"},
+    {"name": "iPhone 16 Pro", "price": 90990, "weight": "180g", "color": "белый"},
+    {"name": "iPhone 16 Pro Max", "price": 105990, "weight": "225g", "color": "красный"},
+    {"name": "iPhone 17", "price": 119990, "weight": "185g", "color": "зеленый"},
+    {"name": "iPhone Air", "price": 130990, "weight": "162g", "color": "серый"},
+    {"name": "iPhone 17 Pro", "price": 139990, "weight": "188g", "color": "синий"},
+    {"name": "iPhone 17 Pro Max", "price": 154990, "weight": "230g", "color": "черный"},
+]
+
+
+@lab3.route('/lab3/products')
+def products_page():
+    min_price_cookie = request.cookies.get('min_price')
+    max_price_cookie = request.cookies.get('max_price')
+    min_price = min(p["price"] for p in products)
+    max_price = max(p["price"] for p in products)
+
+    user_min = request.args.get('min_price', type=int) or (int(min_price_cookie) if min_price_cookie else min_price)
+    user_max = request.args.get('max_price', type=int) or (int(max_price_cookie) if max_price_cookie else max_price)
+
+    if user_min > user_max:
+        user_min, user_max = user_max, user_min
+
+    filtered = [p for p in products if user_min <= p["price"] <= user_max]
+
+    resp = make_response(render_template(
+        'lab3/products.html',
+        products=filtered,
+        count=len(filtered),
+        min_price=user_min,
+        max_price=user_max,
+        min_price_all=min_price,
+        max_price_all=max_price
+    ))
+
+    resp.set_cookie('min_price', str(user_min))
+    resp.set_cookie('max_price', str(user_max))
+
+    return resp
+
+@lab3.route('/lab3/products/reset')
+def reset_products():
+    resp = make_response(redirect('/lab3/products'))
+    resp.delete_cookie('min_price')
+    resp.delete_cookie('max_price')
+    return resp
