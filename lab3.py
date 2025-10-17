@@ -106,3 +106,67 @@ def settings():
         font_size=request.cookies.get('font_size'),
         font_style=request.cookies.get('font_style')
     )
+
+
+@lab3.route('/lab3/train')
+def train():
+    errors = {}
+    fio = request.args.get('fio', '').strip()
+    shelf = request.args.get('shelf', '')
+    linen = request.args.get('linen')
+    baggage = request.args.get('baggage')
+    age = request.args.get('age', '')
+    departure = request.args.get('departure', '').strip()
+    destination = request.args.get('destination', '').strip()
+    date = request.args.get('date', '')
+    insurance = request.args.get('insurance')
+
+    if request.args:
+        if not fio:
+            errors['fio'] = 'Введите ФИО'
+        if not shelf:
+            errors['shelf'] = 'Выберите полку'
+        if not age or not age.isdigit() or not (1 <= int(age) <= 120):
+            errors['age'] = 'Укажите корректный возраст'
+        if not departure:
+            errors['departure'] = 'Укажите пункт выезда'
+        if not destination:
+            errors['destination'] = 'Укажите пункт назначения'
+        if not date:
+            errors['date'] = 'Укажите дату'
+
+        if not errors:
+            price = 1000 if int(age) >= 18 else 700
+            if shelf in ['нижняя', 'нижняя боковая']:
+                price += 100
+            if linen:
+                price += 75
+            if baggage:
+                price += 250
+            if insurance:
+                price += 150
+            ticket_type = 'Детский билет' if int(age) < 18 else 'Взрослый билет'
+            return render_template('lab3/train_ticket.html',
+                                   fio=fio,
+                                   shelf=shelf,
+                                   linen=bool(linen),
+                                   baggage=bool(baggage),
+                                   age=age,
+                                   departure=departure,
+                                   destination=destination,
+                                   date=date,
+                                   insurance=bool(insurance),
+                                   price=price,
+                                   ticket_type=ticket_type)
+
+    return render_template('lab3/train_form.html',
+                           errors=errors,
+                           fio=fio,
+                           shelf=shelf,
+                           linen=linen,
+                           baggage=baggage,
+                           age=age,
+                           departure=departure,
+                           destination=destination,
+                           date=date,
+                           insurance=insurance)
