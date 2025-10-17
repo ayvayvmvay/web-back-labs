@@ -32,7 +32,8 @@ def add_flower_no_name():
 
 @lab2.route('/lab2/flowers/')
 def all_flowers():
-    return render_template("flowers.html", flowers=flower_list)
+    return render_template("lab2/flowers.html", flowers=flower_list)
+
 
 
 
@@ -60,14 +61,14 @@ def example():
         {'name': 'мандарины', 'price': 95},
         {'name': 'манго', 'price': 321}
     ]
-    return render_template('example.html', name=name, lab_num=lab_numb, group=group,
-course=course, fruits=fruits)
-
+    return render_template('lab2/example.html', name=name, number=number, group=group, 
+                           course=course, fruits=fruits)
 
 
 @lab2.route('/lab2/')
 def lab22():
-    return render_template('lab2.html')
+    return render_template('lab2/lab2.html')
+
 
 
 
@@ -80,7 +81,8 @@ def clear_flowers():
 @lab2.route('/lab2/filters')
 def filters():
     phrase = "О <b>сколько</b> <u>нам</u> <i>открытий</i> чудных..."
-    return render_template('filter.html', phrase=phrase)
+    return render_template('lab2/filter.html', phrase=phrase)
+
 
 @lab2.route('/lab2/calc/<int:a>/<int:b>')
 def calc(a, b):
@@ -127,31 +129,32 @@ books = [
 
 @lab2.route('/lab2/books')
 def books_list():
-    return render_template('books.html', books=books)
+    return render_template('lab2/books.html', books=books)
+
 
 vegetables = [
-    {"name": "Картофель", "desc": "Крупный молодой картофель", "img": "potato.jpg"},
-    {"name": "Морковь", "desc": "Сладкая хрустящая морковь", "img": "carrot.jpg"},
-    {"name": "Свёкла", "desc": "Сочная свёкла насыщенного цвета", "img": "beet.jpg"},
-    {"name": "Капуста", "desc": "Белокочанная капуста", "img": "cabbage.jpg"},
-    {"name": "Огурец", "desc": "Свежий зелёный огурец", "img": "cucumber.jpg"},
-    {"name": "Помидор", "desc": "Спелый красный томат", "img": "tomato.jpg"},
-    {"name": "Перец", "desc": "Болгарский перец яркого цвета", "img": "pepper.jpg"},
-    {"name": "Баклажан", "desc": "Глянцевый фиолетовый баклажан", "img": "eggplant.jpg"},
-    {"name": "Лук", "desc": "Золотистый репчатый лук", "img": "onion.jpg"},
-    {"name": "Чеснок", "desc": "Ароматный свежий чеснок", "img": "garlic.jpg"},
-    {"name": "Кабачок", "desc": "Молодой светло-зелёный кабачок", "img": "zucchini.jpg"},
-    {"name": "Брокколи", "desc": "Плотные соцветия брокколи", "img": "broccoli.jpg"},
-    {"name": "Цветная капуста", "desc": "Нежная белая цветная капуста", "img": "cauliflower.jpg"},
-    {"name": "Редис", "desc": "Хрустящий розовый редис", "img": "radish.jpg"},
-    {"name": "Тыква", "desc": "Крупная ярко-оранжевая тыква", "img": "pumpkin.jpg"},
-    {"name": "Кукуруза", "desc": "Сладкая кукуруза в початках", "img": "corn.jpg"},
-    {"name": "Сельдерей", "desc": "Зелёный черешковый сельдерей", "img": "celery.jpg"},
-    {"name": "Петрушка", "desc": "Свежая зелёная петрушка", "img": "parsley.jpg"},
-    {"name": "Укроп", "desc": "Ароматный пучок укропа", "img": "dill.jpg"},
-    {"name": "Шпинат", "desc": "Свежие зелёные листья шпината", "img": "spinach.jpg"}
+    {"name": "Картофель", "desc": "Крупный молодой картофель", "img": "lab2/potato.jpg"},
+    {"name": "Морковь", "desc": "Сладкая хрустящая морковь", "img": "lab2/carrot.jpg"},
+    {"name": "Свёкла", "desc": "Сочная свёкла насыщенного цвета", "img": "lab2/beet.jpg"},
+    {"name": "Капуста", "desc": "Белокочанная капуста", "img": "lab2/cabbage.jpg"},
+    {"name": "Огурец", "desc": "Свежий зелёный огурец", "img": "lab2/cucumber.jpg"},
+    {"name": "Помидор", "desc": "Спелый красный томат", "img": "lab2/tomato.jpg"},
+    {"name": "Перец", "desc": "Болгарский перец яркого цвета", "img": "lab2/pepper.jpg"},
+    {"name": "Баклажан", "desc": "Глянцевый фиолетовый баклажан", "img": "lab2/eggplant.jpg"},
+    {"name": "Лук", "desc": "Золотистый репчатый лук", "img": "lab2/onion.jpg"},
+    {"name": "Чеснок", "desc": "Ароматный свежий чеснок", "img": "lab2/garlic.jpg"},
+    {"name": "Кабачок", "desc": "Молодой светло-зелёный кабачок", "img": "lab2/zucchini.jpg"},
+    {"name": "Брокколи", "desc": "Плотные соцветия брокколи", "img": "lab2/broccoli.jpg"},
+    {"name": "Цветная капуста", "desc": "Нежная белая цветная капуста", "img": "lab2/cauliflower.jpg"},
+    {"name": "Редис", "desc": "Хрустящий розовый редис", "img": "lab2/radish.jpg"},
+    {"name": "Тыква", "desc": "Крупная ярко-оранжевая тыква", "img": "lab2/pumpkin.jpg"},
+    {"name": "Кукуруза", "desc": "Сладкая кукуруза в початках", "img": "lab2/corn.jpg"},
+    {"name": "Сельдерей", "desc": "Зелёный черешковый сельдерей", "img": "lab2/celery.jpg"},
+    {"name": "Петрушка", "desc": "Свежая зелёная петрушка", "img": "lab2/parsley.jpg"},
+    {"name": "Укроп", "desc": "Ароматный пучок укропа", "img": "lab2/dill.jpg"},
+    {"name": "Шпинат", "desc": "Свежие зелёные листья шпината", "img": "lab2/spinach.jpg"}
 ]
-
 @lab2.route('/lab2/vegetables')
 def vegetables_gallery():
-    return render_template('vegetables.html', vegetables=vegetables)
+    return render_template('lab2/vegetables.html', vegetables=vegetables)
+

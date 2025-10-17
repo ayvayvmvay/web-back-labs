@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Шевченко Иван. {% block lab %}{% endblock %} </title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='lab1/main.css') }}">
     <link rel="icon" type="image/png"
-    href="{{ url_for('static', filename='favicon.ico', v=2) }}">
+    href="{{ url_for('static', filename='lab2/favicon.ico', v=2) }}">
+
     <style>
     body {
         {% if request.cookies.get('color') %}

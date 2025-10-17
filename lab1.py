@@ -72,8 +72,8 @@ def author():
 
 @lab1.route('/lab1/image')
 def image():
-    css = url_for('static', filename='lab1.css')
-    img = url_for('static', filename='oak.jpg')
+    css = url_for('static', filename='lab1/lab1.css')
+    img = url_for('static', filename='lab1/oak.jpg')
     html = f'''<!doctype html>
 
 <html>
