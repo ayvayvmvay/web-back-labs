@@ -3,7 +3,8 @@
 {% block lab %}Лабораторная работа 3{% endblock %}
 
 {% block main %}
-    {% if user %}
+    {% if user and age and not errors %}
+
         <h1>Привет, {{ user }}!</h1>
         <h2>Добро пожаловать на наш сайт!</h2>
         <div>Ваш возраст: {{ age }}</div>
@@ -19,7 +20,8 @@
             <div>
                 <input type="text" placeholder="Как вас зовут?" name="user" value="{{ user or '' }}">
                 {% if errors.user %}
-                    <span class="error">{{ errors.user }}</span>
+                    <span class="error" style="color:red;">{{ errors.user }}</span>
+
                 {% endif %}
             </div>
 
@@ -27,7 +29,8 @@
             <div>
                 <input type="number" placeholder="Какой ваш возраст?" name="age" value="{{ age or '' }}">
                 {% if errors.age %}
-                    <span class="error">{{ errors.age }}</span>
+                    <span class="error" style="color:red;">{{ errors.age }}</span>
+
                 {% endif %}
             </div>
 
