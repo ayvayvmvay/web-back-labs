@@ -15,7 +15,7 @@ app.register_blueprint(lab3)
 app.register_blueprint(lab4)
 
 app.secret_key = 'секретный_ключ123'
-
+  
 
 @app.route('/')
 @app.route('/index')
