@@ -114,30 +114,110 @@ def tree():
     return render_template('lab4/tree.html', tree_count=tree_count, tree_max=tree_max)
 
 users = [
-    {'login': 'alex', 'password': '123'},
-    {'login': 'bob', 'password': '555'},
-    {'login': 'dan', 'password': '111'},
-    {'login': 'abc', 'password': '444'}
-]
+    {'login': 'alex', 'password': '123', 'name': 'Алексей Иванов', 'gender': 'м'},
+    {'login': 'bob', 'password': '555', 'name': 'Борис Смирнов', 'gender': 'м'},
+    {'login': 'dan', 'password': '111', 'name': 'Даниил Петров', 'gender': 'м'},
+    {'login': 'abc', 'password': '444', 'name': 'Анна Обычная', 'gender': 'ж'}]
 @lab4.route('/lab4/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
         if 'login' in session:
-            return render_template('lab4/login.html', authorized=True, login=session['login'])
+            return render_template('lab4/login.html', authorized=True, name=session['name'])
         return render_template('lab4/login.html', authorized=False)
 
     login = request.form.get('login')
     password = request.form.get('password')
 
+    if not login:
+        return render_template('lab4/login.html', error='Не введён логин', authorized=False, prev_login='')
+    if not password:
+        return render_template('lab4/login.html', error='Не введён пароль', authorized=False, prev_login=login)
+    
     for user in users:
         if login == user['login'] and password == user['password']:
             session['login'] = login
+            session['name'] = user['name']
+
             return redirect('/lab4/login')
                     
     error = 'Неверные логин или пароль'
-    return render_template('lab4/login.html', error=error, authorized=False)
+    return render_template('lab4/login.html', error=error, authorized=False, prev_login=login)
 
 @lab4.route('/lab4/logout', methods=['POST'])
 def logout():
     session.pop('login', None)
+    session.pop('name', None)
     return redirect('/lab4/login')
+
+
+@lab4.route('/lab4/fridge', methods=['GET', 'POST'])
+def fridge():
+    if request.method == 'GET':
+        return render_template('lab4/fridge.html')
+
+    temp = request.form.get('temperature')
+
+    if not temp:
+        return render_template('lab4/fridge.html', error='Ошибка: не задана температура')
+
+    try:
+        temp = float(temp)
+    except ValueError:
+        return render_template('lab4/fridge.html', error='Ошибка: введите числовое значение температуры')
+
+    if temp < -12:
+        return render_template('lab4/fridge.html', error='Не удалось установить температуру — слишком низкое значение')
+    elif temp > -1:
+        return render_template('lab4/fridge.html', error='Не удалось установить температуру — слишком высокое значение')
+    elif -12 <= temp <= -9:
+        snowflakes = 3
+    elif -8 <= temp <= -5:
+        snowflakes = 2
+    elif -4 <= temp <= -1:
+        snowflakes = 1
+    else:
+        return render_template('lab4/fridge.html', error='Ошибка: недопустимое значение температуры')
+
+    return render_template('lab4/fridge.html', temperature=temp, snowflakes=snowflakes)
+
+
+@lab4.route('/lab4/grain', methods=['GET', 'POST'])
+def grain_order():
+    prices = {
+        'ячмень': 12000,
+        'овёс': 8500,
+        'пшеница': 9000,
+        'рожь': 15000
+    }
+
+    if request.method == 'GET':
+        return render_template('lab4/grain.html', prices=prices)
+
+    grain = request.form.get('grain')
+    weight = request.form.get('weight')
+
+    if not grain:
+        return render_template('lab4/grain.html', prices=prices, error='Ошибка: не выбрано зерно')
+
+    if not weight:
+        return render_template('lab4/grain.html', prices=prices, error='Ошибка: не указан вес')
+
+    try:
+        weight = float(weight)
+    except ValueError:
+        return render_template('lab4/grain.html', prices=prices, error='Ошибка: вес должен быть числом')
+
+    if weight <= 0:
+        return render_template('lab4/grain.html', prices=prices, error='Ошибка: вес должен быть больше 0')
+    if weight > 100:
+        return render_template('lab4/grain.html', prices=prices, error='Ошибка: такого объёма сейчас нет в наличии')
+
+    price_per_ton = prices[grain]
+    total = price_per_ton * weight
+    discount = 0
+
+    if weight > 10:
+        discount = total * 0.1
+        total -= discount
+
+    return render_template('lab4/grain.html', prices=prices, grain=grain, weight=weight, total=total, discount=discount)
