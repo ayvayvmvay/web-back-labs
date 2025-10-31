@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block lab %}Деление чисел{% endblock %}
+
+{% block main %}
+    <form method="post" action="/lab4/div">
+        <h1>Деление чисел</h1>
+        <input type="number" name="x1"> / <input type="number" name="x2">
+        <input type="submit" value="=">
+    </form>
+
+{% endblock %}
