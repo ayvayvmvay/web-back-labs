@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная работа 5{% endblock %}
+
+{% block main %}
+    <h1>Регистрация</h1>
+    <form method="post" action="/lab5/register">
+        <div>
+            <label>Логин:</label>
+            <input type="text" name="login">
+        </div>
+        <div>
+            <label>Пароль:</label>
+            <input type="password" name="password"  >
+        </div>
+        <button type="submit">Зарегистрироваться</button>
+
+    </form>
+    {% if error %}
+        <div> {{error}} </div>
+    {% endif %}
+{% endblock %}
