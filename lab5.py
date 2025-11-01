@@ -105,7 +105,7 @@ def list():
     conn, cur = db_connect()
 
     cur.execute(f"SELECT id FROM users WHERE login='{login}';")
-    login_id = cur.fetchone()["id"]
+    user_id = cur.fetchone()["id"]
 
     cur.execute(f"SELECT * FROM articles WHERE user_id='{user_id}';") 
     articles = cur.fetchall()
