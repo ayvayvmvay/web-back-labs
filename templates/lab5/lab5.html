@@ -29,7 +29,12 @@
             <a href="/lab5/register">Регистрация</a>
             <a href="/lab5/list">Список статей</a>
             <a href="/lab5/create">Создать статью</a>  
-            <div class="username">{{name}} </div>
-        </ul>
+            <div class="username">
+                {% if login %}
+                    {{ login }}
+                {% else %}
+                    Anonymous
+                {% endif %}
+            </div>        </ul>
     </div>
 {% endblock %}
