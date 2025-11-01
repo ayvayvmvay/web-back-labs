@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная работа 5{% endblock %}
+
+{% block main %}
+<style>
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        background-color: white;
+        color: black;
+    }
+    .lab5 {
+        background-color: aqua;
+        max-width: 700px;
+        margin: 50px;
+        text-align: center;
+        padding: 40px;
+        border-radius: 12px;
+    }
+    .username {
+        font-weight: bold;
+        text-align: right;
+    }
+</style>
+    <h1>База знаний</h1>
+    <div class="lab5">
+            <ul style="padding: 0; font-size: 18px"> 
+            <a href="/lab5/login">Войти</a>
+            <a href="/lab5/register">Регистрация</a>
+            <a href="/lab5/list">Список статей</a>
+            <a href="/lab5/create">Создать статью</a>  
+            <div class="username">{{name}} </div>
+        </ul>
+    </div>
+{% endblock %}
