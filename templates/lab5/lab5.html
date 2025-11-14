@@ -28,8 +28,14 @@
             <a href="/lab5/login">Войти</a>
             <a href="/lab5/register">Регистрация</a>
             <a href="/lab5/list">Список статей</a>
-            <a href="/lab5/create">Создать статью</a>  
-            <div class="username">
+            <a href="/lab5/create">Создать статью</a>
+
+            {% if login %}
+                <a href="/lab5/logout">Выйти</a>
+            {% else %}
+                <a href="/lab5/login">Войти</a>
+                <a href="/lab5/register">Регистрация</a>
+            {% endif %}            <div class="username">
                 {% if login %}
                     {{ login }}
                 {% else %}

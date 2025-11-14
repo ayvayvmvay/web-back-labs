@@ -5,9 +5,22 @@
 {% block main %}
     <h1>Статьи</h1>
 
-    {% for article in articles %}
-        <h2>{{ article['title'] }}</h2>
-        <blockquote>{{ article['article_text'] }}</blockquote>
-    {% endfor %}
-
+    {% if not articles %}
+        <p>У вас пока нет ни одной статьи.</p>
+    {% else %}
+        {% for article in articles %}
+            <article style="margin-bottom: 20px;">
+                <h2>{{ article['title'] }}</h2>
+                <blockquote>{{ article['article_text'] }}</blockquote>
+                <div>
+                    <a href="/lab5/edit/{{ article['id'] }}">Редактировать</a>
+                    <form action="/lab5/delete/{{ article['id'] }}" method="post" style="display:inline;">
+                        <button type="submit" onclick="return confirm('Удалить статью?');">
+                            Удалить
+                        </button>
+                    </form>
+                </div>
+            </article>
+        {% endfor %}
+    {% endif %}
 {% endblock %}
