@@ -2,8 +2,6 @@
 
 {% block lab %}Лабораторная работа 6{% endblock %}
 
-{% block main %}
-
 {% block script %}
 <script>
     function getOfficeList() {
@@ -12,7 +10,7 @@
             'jsonrpc': '2.0',
             'method': 'info',
             'id': Math.round(Math.random()*1000)
-        };  
+        };
         fetch(url, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
@@ -22,10 +20,11 @@
         .then(data => {
             const office_list = data.result.offices;
             const total = data.result.total;
+
             const ul = document.getElementById('office-list');
             ul.innerHTML = '';
-            for (let i = 0; i < office_list.length; i++){
 
+            for (let i = 0; i < office_list.length; i++){
                 const office = office_list[i];
                 const li = document.createElement('li');
                 li.className = "office-item";
@@ -39,21 +38,19 @@
 
                 const bookingButton = document.createElement('button');
                 bookingButton.innerText = 'Зарезервировать';
-                bookingButton.onclick = function(){booking(office.number)};
                 bookingButton.className = "btn";
-
-
-                
+                bookingButton.onclick = function(){booking(office.number)};
                 li.appendChild(bookingButton);
+
                 const cancellationButton = document.createElement('button');
                 cancellationButton.innerText = 'Освободить';
                 cancellationButton.className = "btn cancel";
-
-
                 cancellationButton.onclick = function(){cancellation(office.number)};
                 li.appendChild(cancellationButton);
+
                 ul.appendChild(li);
             }
+
             document.getElementById('total').innerText =
                 `Суммарная стоимость аренды: ${total} руб.`;
         });
@@ -61,14 +58,14 @@
 
     function booking(officeNumber) {
         const url = '/lab6/json-rpc-api';
-
         const json = {
             'jsonrpc': '2.0',
             'method': 'booking',
             'params': officeNumber,
             'id': Math.round(Math.random()*1000)
         };
-                fetch(url, {
+
+        fetch(url, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(json)
@@ -79,11 +76,7 @@
         });
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
-        getOfficeList();
-    });
-
-        function cancellation(officeNumber) {
+    function cancellation(officeNumber) {
         const url = '/lab6/json-rpc-api';
         const json = {
             'jsonrpc': '2.0',
@@ -107,6 +100,7 @@
         getOfficeList();
     });
 </script>
+
 <style>
     #office-list {
         list-style: none;
@@ -156,6 +150,7 @@
         font-weight: bold;
     }
 </style>
+
 {% endblock %}
 
 {% block main %}
