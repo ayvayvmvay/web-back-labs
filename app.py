@@ -20,6 +20,8 @@ app.register_blueprint(lab2)
 app.register_blueprint(lab3)
 app.register_blueprint(lab4)
 app.register_blueprint(lab5)
+app.register_blueprint(lab6)
+
 
   
 
@@ -40,6 +42,8 @@ def index():
                 <li><a href="/lab3">Третья лабораторная</a></li>
                 <li><a href="/lab4">Четвертая лабораторная</a></li>
                 <li><a href="/lab5">Пятая лабораторная</a></li>
+                <li><a href="/lab6">Шестая лабораторная</a></li>
+
 
 
 
