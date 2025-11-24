@@ -6,10 +6,15 @@ offices = []
 for i in range(1, 11):
     offices.append({"number": i, "tenant": ""})
 @lab6.route('/lab6/')
-def lab():
-return render_template('lab6/lab6.html')
+def main():
 
-@lab6.route('/lab6/json-rpc-api/', methods = ['POST'])
+    return render_template('lab6/lab6.html')
+
+
+
+
+@lab6.route('/lab6/json-rpc-api', methods = ['POST'])
+
 def api():
     data = request.json
     id = data['id']
@@ -50,7 +55,34 @@ def api():
                     'result': 'success',
                     'id': id
                 }
-    
+    if data['method'] == 'cancellation':
+        office_number = data['params']
+        for office in offices:
+            if office['number'] == office_number:
+                if not office['tenant']:
+                    return {
+                        'jsonrpc': '2.0',
+                        'error': {
+                            'code': 3,
+                            'message': 'Office not booked'
+                        },
+                        'id': id
+                    }
+                if office['tenant'] != login:
+                    return {
+                        'jsonrpc': '2.0',
+                        'error': {
+                            'code': 4,
+                            'message': 'Not your booking'
+                        },
+                        'id': id
+                    }
+                office['tenant'] = ""
+                return {
+                    'jsonrpc': '2.0',
+                    'result': 'success',
+                    'id': id
+                }
     return {
         'jsonrpc': '2.0',
         'error': {      
@@ -59,3 +91,4 @@ def api():
         },
         'id': id
     }
+
