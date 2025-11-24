@@ -9,7 +9,7 @@ for i in range(1, 11):
         "tenant": "",
         "price": 500 + i * 100
     })
-    
+        
 @lab6.route('/lab6/')
 def main():
     return render_template('lab6/lab6.html')
