@@ -15,7 +15,7 @@ from rgz import rgz
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'секретный_ключ123')
-app.config['DB_TYPE'] = os.getenv('DB_TYPE', 'postgres')
+app.config['DB_TYPE'] = 'sqlite'
 app.register_blueprint(lab1)
 app.register_blueprint(lab2)
 app.register_blueprint(lab3)
