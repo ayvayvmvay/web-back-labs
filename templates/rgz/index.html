@@ -6,8 +6,6 @@
         <p>Курсовой проект по Web-программированию</p>
         <p>Иван Шевченко, ФБИ-34</p>
         
-        <hr style="margin: 20px 0;">
-
         {% if session.get('rgz_login') %}
             <!-- Если пользователь вошел -->
             <p>Привет, <b>{{ session.get('rgz_login') }}</b>!</p>
@@ -25,11 +23,6 @@
             </p>
         {% endif %}
 
-        <hr style="margin: 20px 0;">
-        
-        <p style="font-size: 0.9em; color: gray;">
-            Для первого запуска:<br>
-            <a href="/rgz/init_db">Заполнить базу данными (30 ботов)</a>
-        </p>
+
     </div>
 {% endblock %}
