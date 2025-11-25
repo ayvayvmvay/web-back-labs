@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block lab %}РГЗ - Моя анкета{% endblock %}
+
+{% block main %}
+    <h1>Моя анкета</h1>
+    
+    <form method="post" enctype="multipart/form-data" style="max-width: 500px; margin: 0 auto; text-align: left;">
+        
+        <div style="margin-bottom: 15px;">
+            <label>Ваше имя:</label><br>
+            <input type="text" name="name" value="{{ user.name or '' }}" required style="width: 100%;">
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label>Возраст:</label><br>
+            <input type="number" name="age" min="18" max="100" value="{{ user.age or '' }}" required>
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label>Ваш пол:</label><br>
+            <label><input type="radio" name="gender" value="m" {% if user.gender == 'm' %}checked{% endif %} required> Мужской</label>
+            <label><input type="radio" name="gender" value="f" {% if user.gender == 'f' %}checked{% endif %}> Женский</label>
+            <br>
+            <small style="color: gray;">(Пол для поиска определяется автоматически)</small>
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label>О себе:</label><br>
+            <textarea name="about" rows="4" style="width: 100%;">{{ user.about or '' }}</textarea>
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label>Фотография:</label><br>
+            {% if user.photo %}
+                <img src="{{ url_for('static', filename='rgz/' + user.photo) }}" alt="Avatar" style="max-width: 200px; border-radius: 10px; margin-bottom: 10px;"><br>
+            {% endif %}
+            <input type="file" name="photo" accept="image/*">
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label>
+                <input type="checkbox" name="is_hidden" {% if user.is_hidden %}checked{% endif %}>
+                Спрятать анкету из поиска
+            </label>
+        </div>
+
+        <button type="submit" style="padding: 10px 20px; font-size: 16px;">Сохранить анкету</button>
+    </form>
+
+    <hr style="margin-top: 30px;">
+    
+    <!-- Опасная зона: Удаление аккаунта -->
+    <div style="margin-top: 20px; color: red;">
+        <h3>Удаление аккаунта</h3>
+        <form action="/rgz/delete_account" method="post" onsubmit="return confirm('Вы уверены? Это действие нельзя отменить.');">
+             <button type="submit" style="background: red; color: white; border: none; padding: 10px;">Удалить мой аккаунт</button>
+        </form>
+    </div>
+
+    <div style="margin-top: 30px; text-align: center;">
+        <a href="/rgz/">На главную</a>
+    </div>
+{% endblock %}

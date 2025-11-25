@@ -1,22 +1,282 @@
+/* --- ПЕРЕМЕННЫЕ (Dark Romantic Palette) --- */
+:root {
+    /* Основные цвета */
+    --bg-color: #1a1a1d;           /* Глубокий темный фон (почти черный) */
+    --card-bg: #25252b;            /* Темно-серый, мягкий фон для блоков */
+    
+    /* Акцентный градиент (Красно-розовый) */
+    --primary-gradient: linear-gradient(135deg, #ff416c, #ff4b2b); 
+    --primary-color: #ff4757;      /* Основной красный цвет для текста/рамок */
+    
+    /* Текст */
+    --text-main: #f1f2f6;          /* Мягкий белый */
+    --text-muted: #a4b0be;         /* Приглушенный серый */
+    
+    /* Элементы интерфейса */
+    --input-bg: #2f3542;           /* Фон полей ввода */
+    --border-color: #404552;       /* Цвет рамок */
+    --shadow: 0 15px 35px rgba(0, 0, 0, 0.6); /* Глубокая тень */
+    --radius: 16px;                /* Сильное скругление */
+}
+
+/* --- ОСНОВНЫЕ СТИЛИ --- */
 body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-main);
     margin: 0;
-    }
-main {
-    margin-bottom: 40px;
-    padding: 10px;
-    }
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    line-height: 1.6;
+}
+
+/* --- ШАПКА --- */
 header {
+    background: #202025; /* Чуть светлее фона */
+    border-bottom: 1px solid #333;
+    padding: 15px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+}
+
+header nav {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 0 20px;
+    flex-wrap: wrap;
+}
+
+header a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 15px;
+    padding: 8px 18px;
+    border-radius: 30px;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+header a:hover, header a.active {
+    color: white;
+    background: rgba(255, 71, 87, 0.1); /* Легкая красная подсветка */
+    border-color: var(--primary-color);
+    box-shadow: 0 0 15px rgba(255, 71, 87, 0.3); /* Эффект неона */
+}
+
+/* --- КОНТЕЙНЕРЫ --- */
+main {
+    flex: 1;
+    max-width: 800px;
+    width: 90%;
+    margin: 40px auto;
+}
+
+/* Карточки контента */
+.form-container, .profile-wrapper, .search-container, main > div {
+    background: var(--card-bg);
+    padding: 40px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
     margin-bottom: 30px;
-    padding: 20px;
-    background: Olightgray;
-    }
-footer {
+    border: 1px solid rgba(255, 255, 255, 0.05); /* Тонкая рамка */
+}
+
+/* --- ТИПОГРАФИКА --- */
+h1, h2, h3 {
+    margin-top: 0;
+    color: white;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+h1 { 
+    text-align: center; 
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent; /* Текст градиентом */
+    margin-bottom: 30px;
+}
+
+h2 { border-bottom: 1px solid var(--border-color); padding-bottom: 15px; margin-bottom: 25px; font-size: 1.5rem; }
+
+p { color: var(--text-muted); }
+
+a { color: var(--primary-color); text-decoration: none; transition: 0.2s; }
+a:hover { color: #ff6b81; text-shadow: 0 0 10px rgba(255, 107, 129, 0.5); }
+
+/* --- ФОРМЫ И INPUTS (Dark Mode) --- */
+label {
+    display: block;
     margin-top: 20px;
-    padding: 10px;
-    background: Olightgray;
-    text-align: right;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    } 
+    margin-bottom: 8px;
+    color: var(--text-main);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+input[type="text"], 
+input[type="password"], 
+input[type="number"], 
+select, 
+textarea {
+    width: 100%;
+    padding: 14px 16px;
+    background-color: var(--input-bg);
+    border: 1px solid var(--border-color);
+    color: white;
+    border-radius: 10px;
+    font-size: 16px;
+    font-family: inherit;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+/* Убираем белый фон автозаполнения в Chrome */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus {
+    -webkit-text-fill-color: white;
+    -webkit-box-shadow: 0 0 0px 1000px var(--input-bg) inset;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 15px rgba(255, 75, 43, 0.2);
+    background-color: #383e4a;
+}
+
+/* --- КНОПКИ --- */
+button, .btn {
+    display: inline-block;
+    background: var(--primary-gradient);
+    color: white;
+    border: none;
+    padding: 14px 30px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-align: center;
+    margin-top: 15px;
+    box-shadow: 0 5px 15px rgba(255, 75, 43, 0.3);
+}
+
+button:hover, .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(255, 75, 43, 0.5); /* Яркое свечение при наведении */
+}
+
+/* Опасная кнопка (удаление) */
+button[style*="background: red"] {
+    background: transparent !important;
+    border: 1px solid #ff4757;
+    color: #ff4757;
+    box-shadow: none;
+}
+button[style*="background: red"]:hover {
+    background: #ff4757 !important;
+    color: white;
+}
+
+/* --- ПОИСК И КАРТОЧКИ --- */
+.filters {
+    background: #2f3542;
+    padding: 20px;
+    border-radius: var(--radius);
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    border: 1px solid var(--border-color);
+}
+.filters input { margin-bottom: 0; }
+.filters button { margin-top: 0; }
+
+#results-area {
+    margin-top: 30px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 25px;
+}
+
+.user-card {
+    background: #2f3542;
+    border-radius: var(--radius);
+    padding: 25px 20px;
+    text-align: center;
+    border: 1px solid transparent;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.user-card:hover {
+    transform: translateY(-7px);
+    border-color: var(--primary-color);
+    box-shadow: 0 10px 30px rgba(255, 71, 87, 0.15);
+}
+
+.user-card img {
+    width: 110px;
+    height: 110px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 15px;
+    border: 3px solid #ff4757;
+    padding: 3px; /* Отступ от рамки */
+    background: var(--card-bg);
+}
+
+.user-card h3 {
+    margin: 10px 0 5px;
+    color: white;
+    font-size: 1.2rem;
+}
+
+.user-card p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+/* --- ФУТЕР --- */
+footer {
+    background: #151518;
+    border-top: 1px solid #333;
+    color: #777;
+    text-align: center;
+    padding: 30px 0;
+    margin-top: auto;
+    font-size: 0.85rem;
+}
+
+/* --- АДАПТИВНОСТЬ --- */
+@media (max-width: 600px) {
+    header nav { flex-direction: column; gap: 10px; }
+    main { width: 95%; padding: 0 10px; }
+    .filters { flex-direction: column; }
+    .filters button { width: 100%; }
+}
+
+/* Сообщения об ошибках */
+.error-msg, div[style*="color: red"] {
+    background: rgba(255, 71, 87, 0.1);
+    color: #ff6b81 !important;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #ff4757;
+    margin-top: 15px;
+}

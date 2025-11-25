@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+{% block lab %}РГЗ - Поиск{% endblock %}
+
+{% block main %}
+    <style>
+        /* Стили специально для поиска */
+        .filters {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .filters input {
+            flex: 1;
+            margin-bottom: 0;
+            min-width: 150px;
+        }
+        .user-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background: #fff;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        .user-card img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 50%;
+            background: #eee;
+        }
+        .user-info h3 { margin: 0 0 5px 0; }
+        .user-info p { margin: 0; color: #555; }
+        .pagination { text-align: center; margin-top: 20px; }
+        .hidden { display: none; }
+    </style>
+
+    <h1>Поиск пары</h1>
+
+    <div class="filters">
+        <input type="text" id="search-name" placeholder="Имя (частично)">
+        <input type="number" id="search-age" placeholder="Точный возраст">
+        <button onclick="startSearch()">Найти</button>
+    </div>
+
+    <div id="results-area">
+        <p style="color: gray;">Введите параметры и нажмите "Найти", чтобы увидеть список.</p>
+    </div>
+
+    <div class="pagination">
+        <button id="prev-btn" onclick="changePage(-1)" class="hidden">Previous</button>
+        <span id="page-indicator" class="hidden">Страница 1</span>
+        <button id="next-btn" onclick="changePage(1)" class="hidden">Next</button>
+    </div>
+
+    <script>
+        let currentPage = 1;
+
+        function startSearch() {
+            currentPage = 1;
+            loadUsers();
+        }
+
+        function changePage(delta) {
+            currentPage += delta;
+            if (currentPage < 1) currentPage = 1;
+            loadUsers();
+        }
+
+        async function loadUsers() {
+            const name = document.getElementById('search-name').value;
+            const age = document.getElementById('search-age').value;
+            const resultsArea = document.getElementById('results-area');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const pageInd = document.getElementById('page-indicator');
+
+            // Формируем JSON-RPC запрос
+            const payload = {
+                "jsonrpc": "2.0",
+                "method": "search",
+                "params": {
+                    "page": currentPage,
+                    "name": name,
+                    "age": age
+                },
+                "id": 1
+            };
+
+            try {
+                resultsArea.innerHTML = '<p>Загрузка...</p>';
+                
+                const response = await fetch('/rgz/api', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(payload)
+                });
+
+                // Если вернулся 401, значит сессия истекла
+                if (response.status === 401) {
+                    alert("Пожалуйста, авторизуйтесь снова.");
+                    window.location.href = "/rgz/login";
+                    return;
+                }
+
+                const data = await response.json();
+
+                resultsArea.innerHTML = ''; // Очищаем старое
+
+                // Если есть ошибка в ответе JSON-RPC
+                if (data.error) {
+                    resultsArea.innerHTML = `<p style="color:red">Ошибка: ${data.error.message || 'Неизвестная ошибка'}</p>`;
+                    return;
+                }
+
+                const users = data.result;
+
+                if (!users || users.length === 0) {
+                    resultsArea.innerHTML = '<p>Никого не найдено. Попробуйте изменить параметры или заполните свой профиль (пол).</p>';
+                    nextBtn.classList.add('hidden');
+                } else {
+                    // Рендерим карточки
+                    users.forEach(user => {
+                        // Если фото нет, ставим заглушку
+                        const photoSrc = user.photo ? `/static/rgz/${user.photo}` : 'https://via.placeholder.com/100?text=No+Photo';
+                        
+                        const card = document.createElement('div');
+                        card.className = 'user-card';
+                        card.innerHTML = `
+                            <img src="${photoSrc}" alt="${user.name}">
+                            <div class="user-info">
+                                <h3>${user.name}, ${user.age} лет</h3>
+                                <p>${user.about || 'О себе не написал(а)'}</p>
+                            </div>
+                        `;
+                        resultsArea.appendChild(card);
+                    });
+
+                    // Управление кнопкой "Next"
+                    // Если пришло 3 человека (наш лимит), скорее всего есть еще
+                    if (users.length === 3) {
+                        nextBtn.classList.remove('hidden');
+                    } else {
+                        nextBtn.classList.add('hidden');
+                    }
+                }
+
+                // Управление пагинацией
+                pageInd.innerText = 'Страница ' + currentPage;
+                pageInd.classList.remove('hidden');
+
+                if (currentPage > 1) {
+                    prevBtn.classList.remove('hidden');
+                } else {
+                    prevBtn.classList.add('hidden');
+                }
+
+            } catch (e) {
+                console.error(e);
+                resultsArea.innerHTML = '<p style="color:red">Ошибка соединения с сервером.</p>';
+            }
+        }
+    </script>
+{% endblock %}

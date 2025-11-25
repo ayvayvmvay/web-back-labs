@@ -4,14 +4,17 @@ import sqlite3
 import psycopg2
 from os import path
 
+
+
+
 lab6 = Blueprint('lab6', __name__)
 def db_connect():
     if current_app.config['DB_TYPE'] == 'postgres':
         conn = psycopg2.connect(
             host='127.0.0.1',
-            database='daniil_volkov_knowledge_base',
-            user='daniil_volkov_knowledge_base',
-            password='123'
+            database='ivan_shevchenko_knowledge_base',
+            user='ivan_shevchenko_knowledge_base',
+            password='1'
         )
         cur = conn.cursor(cursor_factory=RealDictCursor)
     else:
@@ -33,9 +36,6 @@ def lab():
 
     return render_template('lab6/lab6.html')
 
-
-
-
 @lab6.route('/lab6/json-rpc-api', methods=['POST'])
 
 
@@ -49,7 +49,7 @@ def api():
         else:
             cur.execute("SELECT * FROM offices ORDER BY number")
 
-        offices = cur.fetchall()
+        offices = [dict(row) for row in cur.fetchall()]
 
 
         login = session.get('login')

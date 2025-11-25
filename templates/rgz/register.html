@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block lab %}РГЗ - Регистрация{% endblock %}
+{% block main %}
+    <h1>Регистрация</h1>
+    <form method="post">
+        <div>
+            <label>Логин (только латиница):</label><br>
+            <input type="text" name="login" required>
+        </div>
+        <div>
+            <label>Пароль:</label><br>
+            <input type="password" name="password" required>
+        </div>
+        <button type="submit">Зарегистрироваться</button>
+    </form>
+    {% if error %}
+        <div style="color: red; margin-top: 10px;">{{ error }}</div>
+    {% endif %}
+    <p><a href="/rgz/login">Уже есть аккаунт? Войти</a></p>
+{% endblock %}
