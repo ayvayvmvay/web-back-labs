@@ -45,7 +45,7 @@ def index():
                 <li><a href="/lab4">Четвертая лабораторная</a></li>
                 <li><a href="/lab5">Пятая лабораторная</a></li>
                 <li><a href="/lab6">Шестая лабораторная</a></li>
-                <li><a href="/lab6">Ргз</a></li>
+                <li><a href="/rgz">Ргз</a></li>
 
 
 
