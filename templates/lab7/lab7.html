@@ -20,7 +20,7 @@
         background-color: white;
         margin: 15% auto;
         padding: 20px;
-        border: 1px solid black;
+        border: 1px solid gray;
         width: 400px;
         box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
         border-radius: 5px;
@@ -37,6 +37,11 @@
     .modal-buttons {
         margin-top: 20px;
         text-align: right;
+    }
+    .error-message {
+        color: red;
+        font-size: 0.9em;
+        margin-top: 5px;
     }
 </style>
 {% endblock %}
@@ -68,6 +73,7 @@
     <div class="modal" id="film-modal">
         <div class="modal-content">
             <h2>Данные о фильме</h2>
+            <input type="hidden" id="id">
             
             <label>
                 Название (оригинал):<br>
@@ -84,6 +90,7 @@
             <label>
                 Описание:<br>
                 <textarea id="description" rows="3"></textarea>
+                <div id="description-error" class="error-message"></div>
             </label>
 
             <div class="modal-buttons">
