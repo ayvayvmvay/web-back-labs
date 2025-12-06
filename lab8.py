@@ -3,6 +3,7 @@ from lab8_db import db
 from lab8_db.models import users, articles
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
+from sqlalchemy import or_, func
 
 lab8 = Blueprint('lab8', __name__)
 
@@ -162,3 +163,41 @@ def delete_article(article_id):
 def logout():
     logout_user()
     return redirect('/lab8/')
+
+
+@lab8.route('/lab8/public/')
+def public_articles():
+    public_list = articles.query.filter_by(is_public=True).all()
+    return render_template('lab8/public.html', articles=public_list)
+
+
+@lab8.route('/lab8/search/')
+def search_articles():
+    query = request.args.get("q", "")
+
+    if not query:
+        return render_template('lab8/search.html', articles=[])
+
+    q_lower = f"%{query.lower()}%"
+
+    if current_user.is_authenticated:
+        results = articles.query.filter(
+            or_(
+                func.lower(articles.title).like(q_lower),
+                func.lower(articles.article_text).like(q_lower)
+            ),
+            or_(
+                articles.login_id == current_user.id,
+                articles.is_public == True
+            )
+        ).all()
+    else:
+        results = articles.query.filter(
+            or_(
+                func.lower(articles.title).like(q_lower),
+                func.lower(articles.article_text).like(q_lower)
+            ),
+            articles.is_public == True
+        ).all()
+
+    return render_template('lab8/search.html', articles=results, query=query)

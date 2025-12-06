@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block main %}
+<div class="container">
+
+<h1>Поиск статей</h1>
+
+<form method="get" action="/lab8/search/">
+    <input type="text" name="q" value="{{ query }}" placeholder="Введите строку">
+    <button type="submit">Искать</button>
+</form>
+
+{% if query %}
+    <h3>Результаты по запросу "{{ query }}":</h3>
+
+    {% if articles %}
+        <ul>
+        {% for a in articles %}
+            <li>
+                <b>{{ a.title }}</b>  
+                <br>
+                <a href="/lab8/article/{{ a.id }}/">Читать</a>
+                <br><br>
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>Ничего не найдено.</p>
+    {% endif %}
+{% endif %}
+
+</div>
+{% endblock %}

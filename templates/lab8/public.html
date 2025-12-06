@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block main %}
+<div class="container">
+    <h1>Публичные статьи</h1>
+
+    {% if articles %}
+        <ul>
+        {% for a in articles %}
+            <li>
+                <b>{{ a.title }}</b>
+                <br>
+                <a href="/lab8/article/{{ a.id }}/">Читать</a>
+                <br><br>
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>Публичных статей пока нет.</p>
+    {% endif %}
+</div>
+{% endblock %}
