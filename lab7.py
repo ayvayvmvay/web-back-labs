@@ -77,3 +77,18 @@ def update_film(id):
     film = request.get_json()
     films[id] = film
     return films[id]
+
+
+@lab7.route('/lab7/rest-api/films/', methods=['POST'])
+def add_film():
+    data = request.json
+
+    new_film = {
+        'name': data.get('name'),
+        'year': data.get('year'),
+        'rating': data.get('rating'),
+    }
+
+    films.append(new_film)
+
+    return {"result": "ok"}
