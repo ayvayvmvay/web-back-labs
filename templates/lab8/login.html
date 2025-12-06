@@ -4,27 +4,24 @@
 
 {% block main %}
 
-    <h1>Регистрация</h1>
-    
+<h1>Вход</h1>
+
 {% if error %}
-<p style="color: rgb(55, 52, 226);">{{ error }}</p>
+<p style="color: rgb(0, 30, 255);">{{ error }}</p>
 {% endif %}
 
-    
-
-    <form action="/lab8/register" method="post">
-    
-        <div>
-            <label>
-                Логин: <input type="text" name="login">
-            </label>
-        </div>
-        <div>
-            <label>
-                Пароль: <input type="password" name="password">
-            </label>
-        </div>
-        <button type="submit">Зарегистрироваться</button>
-    </form>
+<form action="/lab8/login/" method="post">
+    <div>
+        <label>
+            Логин: <input type="text" name="login">
+        </label>
+    </div>
+    <div>
+        <label>
+            Пароль: <input type="password" name="password">
+        </label>
+    </div>
+    <button type="submit">Вход</button>
+</form>
 
 {% endblock %}
