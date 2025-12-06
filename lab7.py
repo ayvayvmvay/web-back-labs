@@ -1,6 +1,5 @@
 from flask import Blueprint, render_template, request, session, current_app, abort
 
-
 lab7 = Blueprint('lab7', __name__)
 
 @lab7.route('/lab7/')
@@ -57,38 +56,32 @@ def get_films():
 def get_film(id):
     if id < 0 or id >= len(films):
         abort(404)
-
     return films[id]
+
 
 @lab7.route('/lab7/rest-api/films/<int:id>', methods=['DELETE'])
 def delete_film(id):
     if id < 0 or id >= len(films):
         abort(404)
-
-    deleted = films.pop(id)
-    return deleted
+    return films.pop(id)
 
 
 @lab7.route('/lab7/rest-api/films/<int:id>', methods=['PUT'])
 def update_film(id):
     if id < 0 or id >= len(films):
         abort(404)
-
-    film = request.get_json()
-    films[id] = film
+    films[id] = request.get_json()
     return films[id]
 
 
 @lab7.route('/lab7/rest-api/films/', methods=['POST'])
 def add_film():
-    data = request.json
-
+    data = request.get_json()
     new_film = {
-        'name': data.get('name'),
+        'title': data.get('title'),
+        'title_ru': data.get('title_ru'),
         'year': data.get('year'),
-        'rating': data.get('rating'),
+        'description': data.get('description'),
     }
-
     films.append(new_film)
-
     return {"result": "ok"}
