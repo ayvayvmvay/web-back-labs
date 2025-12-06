@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная работа 8{% endblock %}
+
+{% block main %}
+<div class="container">
+<h1>Ваши статьи</h1>
+
+<a href="/lab8/create/">Создать статью</a>
+
+<ul>
+{% for article in articles %}
+    <li>
+        <b>{{ article.title }}</b>
+        <br>
+        <a href="/lab8/edit/{{ article.id }}/">Редактировать</a>
+        |
+        <a href="/lab8/delete/{{ article.id }}/">Удалить</a>
+    </li>
+{% else %}
+    <p>У вас еще нет статей.</p>
+{% endfor %}
+</ul>
+
+</div>
+{% endblock %}

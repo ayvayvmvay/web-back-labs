@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block main %}
+
+<div class="container">
+<h1>Создание статьи</h1>
+
+{% if error %}
+<p class="error">{{ error }}</p>
+{% endif %}
+
+<form action="/lab8/create/" method="post">
+    <div>
+        <label>Название: <input type="text" name="title"></label>
+    </div>
+    <div>
+        <label>Текст статьи:</label><br>
+        <textarea name="text" rows="6" cols="50"></textarea>
+    </div>
+    <div>
+        <label><input type="checkbox" name="is_favorite"> Избранное</label>
+    </div>
+    <div>
+        <label><input type="checkbox" name="is_public"> Публичная</label>
+    </div>
+    <button type="submit">Создать</button>
+</form>
+
+</div>
+{% endblock %}

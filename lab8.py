@@ -66,7 +66,7 @@ def login():
         login_user(user, remember=remember)
 
         return redirect('/lab8/')
-    
+
     return render_template('lab8/login.html', 
                            error='Ошибка входа: логин и/или пароль неверны')
 
@@ -74,7 +74,87 @@ def login():
 @lab8.route('/lab8/articles/')
 @login_required
 def articles_list():
-    return "список статей"
+    user_articles = articles.query.filter_by(login_id=current_user.id).all()
+    return render_template('lab8/articles.html', articles=user_articles)
+
+
+@lab8.route('/lab8/create/', methods=['GET', 'POST'])
+@login_required
+def create_article():
+    if request.method == 'GET':
+        return render_template('lab8/create.html')
+
+    title = request.form.get('title')
+    text = request.form.get('text')
+
+    is_favorite = bool(request.form.get('is_favorite'))
+    is_public = bool(request.form.get('is_public'))
+
+    if not title or not text:
+        return render_template(
+            'lab8/create.html',
+            error='Название и текст статьи не должны быть пустыми'
+        )
+
+    new_article = articles(
+        login_id=current_user.id,
+        title=title,
+        article_text=text,
+        is_favorite=is_favorite,
+        is_public=is_public,
+        likes=0
+    )
+
+    db.session.add(new_article)
+    db.session.commit()
+
+    return redirect('/lab8/articles/')
+
+
+@lab8.route('/lab8/edit/<int:article_id>/', methods=['GET', 'POST'])
+@login_required
+def edit_article(article_id):
+    article = articles.query.get_or_404(article_id)
+
+    if article.login_id != current_user.id:
+        return "Доступ запрещен", 403
+
+    if request.method == 'GET':
+        return render_template('lab8/edit.html', article=article)
+
+    title = request.form.get('title')
+    text = request.form.get('text')
+    is_favorite = bool(request.form.get('is_favorite'))
+    is_public = bool(request.form.get('is_public'))
+
+    if not title or not text:
+        return render_template(
+            'lab8/edit.html',
+            article=article,
+            error="Поля не должны быть пустыми"
+        )
+
+    article.title = title
+    article.article_text = text
+    article.is_favorite = is_favorite
+    article.is_public = is_public
+
+    db.session.commit()
+    return redirect('/lab8/articles/') 
+
+
+@lab8.route('/lab8/delete/<int:article_id>/')
+@login_required
+def delete_article(article_id):
+    article = articles.query.get_or_404(article_id)
+
+    if article.login_id != current_user.id:
+        return "Доступ запрещен", 403
+
+    db.session.delete(article)
+    db.session.commit()
+
+    return redirect('/lab8/articles/')
 
 
 @lab8.route('/lab8/logout/')
