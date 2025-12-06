@@ -59,11 +59,14 @@ def login():
 
     user = users.query.filter_by(login=login_form).first()
 
-    if user:
-        if check_password_hash(user.password, password_form):
-            login_user(user, remember=False)
-            return redirect('/lab8/')
+    if user and check_password_hash(user.password, password_form):
 
+        remember = bool(request.form.get('remember'))
+
+        login_user(user, remember=remember)
+
+        return redirect('/lab8/')
+    
     return render_template('lab8/login.html', 
                            error='Ошибка входа: логин и/или пароль неверны')
 
