@@ -1,75 +1,157 @@
 from flask import Blueprint, render_template, request, abort, jsonify
+import sqlite3
+from os import path
+import datetime
 
 lab7 = Blueprint('lab7', __name__)
+
+DB_NAME = 'lab7.db'
+
+def db_connect():
+    dir_path = path.dirname(path.realpath(__file__))
+    db_path = path.join(dir_path, DB_NAME)
+    conn = sqlite3.connect(db_path)
+    conn.row_factory = sqlite3.Row
+    cur = conn.cursor()
+    return conn, cur
+
+def db_close(conn, cur):
+    conn.commit()
+    cur.close()
+    conn.close()
+
+def init_db():
+    conn, cur = db_connect()
+    
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS films (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT,
+            title_ru TEXT NOT NULL,
+            year INTEGER,
+            description TEXT
+        );
+    """)
+    
+    db_close(conn, cur)
+
+init_db()
 
 @lab7.route('/lab7/')
 def lab():
     return render_template('lab7/lab7.html')
 
-films = [
-    {
-        "title": "Intouchables",
-        "title_ru": "1+1",
-        "year": 2011,
-        "description": "Пострадав в результате несчастного случая, богатый аристократ Филипп нанимает в помощники человека, который менее всего подходит для этой работы, – молодого жителя предместья Дрисса, только что освободившегося из тюрьмы. Несмотря на то, что Филипп прикован к инвалидному креслу, Дриссу удается привнести в размеренную жизнь аристократа дух приключений."
-    },
-    {
-        "title": "The Shawshank Redemption",
-        "title_ru": "Побег из Шоушенка",
-        "year": 1994,
-        "description": "Бухгалтер Энди Дюфрейн обвинён в убийстве собственной жены и её любовника. Оказавшись в тюрьме под названием Шоушенк, он сталкивается с жестокостью и беззаконием, царящими по обе стороны решётки. Каждый, кто попадает в эти стены, становится их рабом до конца жизни. Но Энди, обладающий живым умом и доброй душой, находит подход как к заключённым, так и к охранникам, добиваясь их особого к себе расположения."
-    },
-    {
-        "title": "The Gentlemen",
-        "title_ru": "Джентльмены",
-        "year": 2019,
-        "description": "Один ушлый американец ещё со студенческих лет приторговывал наркотиками, а теперь придумал схему нелегального обогащения с использованием поместий обедневшей английской аристократии и очень неплохо на этом разбогател. Другой пронырливый журналист приходит к Рэю, правой руке американца, и предлагает тому купить киносценарий, в котором подробно описаны преступления его босса при участии других представителей лондонского криминального мира — партнёра-еврея, китайской диаспоры, чернокожих спортсменов и даже русского олигарха."
-    }
-]
-
 @lab7.route('/lab7/rest-api/films/', methods=['GET'])
 def get_films():
+    conn, cur = db_connect()
+    cur.execute("SELECT * FROM films")
+    films = [dict(row) for row in cur.fetchall()]
+    db_close(conn, cur)
     return jsonify(films)
 
 @lab7.route('/lab7/rest-api/films/<int:id>', methods=['GET'])
 def get_film(id):
-    if id < 0 or id >= len(films):
+    conn, cur = db_connect()
+    cur.execute("SELECT * FROM films WHERE id = ?", (id,))
+    film = cur.fetchone()
+    db_close(conn, cur)
+    
+    if film is None:
         abort(404)
-    return jsonify(films[id])
+        
+    return jsonify(dict(film))
 
 @lab7.route('/lab7/rest-api/films/<int:id>', methods=['DELETE'])
 def delete_film(id):
-    if id < 0 or id >= len(films):
-        abort(404)
-    films.pop(id)
+    conn, cur = db_connect()
+    cur.execute("DELETE FROM films WHERE id = ?", (id,))
+    db_close(conn, cur)
     return '', 204
 
 @lab7.route('/lab7/rest-api/films/<int:id>', methods=['PUT'])
 def update_film(id):
-    if id < 0 or id >= len(films):
-        abort(404)
-    
     film = request.get_json()
+    errors = {}
     
-    if film.get('description') == '':
-        return {'description': 'Заполните описание'}, 400
+    if not film.get('title_ru'):
+        errors['title_ru'] = 'Русское название не может быть пустым'
 
-    if not film.get('title') and film.get('title_ru'):
-         film['title'] = film['title_ru']
+    if not film.get('title'):
+        if film.get('title_ru'):
+            film['title'] = film['title_ru']
+        else:
+             errors['title'] = 'Укажите оригинальное или русское название'
 
-    films[id] = film
-    return jsonify(films[id])
+    current_year = datetime.datetime.now().year
+    year = film.get('year')
+    if not year:
+        errors['year'] = 'Укажите год'
+    elif not (1895 <= int(year) <= current_year):
+        errors['year'] = f'Год должен быть от 1895 до {current_year}'
 
+    description = film.get('description')
+    if not description:
+        errors['description'] = 'Заполните описание'
+    elif len(description) > 2000:
+        errors['description'] = 'Описание не должно превышать 2000 символов'
+
+    if errors:
+        return errors, 400
+
+    conn, cur = db_connect()
+    
+    cur.execute("SELECT id FROM films WHERE id = ?", (id,))
+    if cur.fetchone() is None:
+        db_close(conn, cur)
+        abort(404)
+
+    cur.execute('''
+        UPDATE films 
+        SET title = ?, title_ru = ?, year = ?, description = ?
+        WHERE id = ?
+    ''', (film['title'], film['title_ru'], film['year'], film['description'], id))
+    
+    db_close(conn, cur)
+    return jsonify(film)
 
 @lab7.route('/lab7/rest-api/films/', methods=['POST'])
 def add_film():
     film = request.get_json()
+    errors = {}
     
-    if film.get('description') == '':
-        return {'description': 'Заполните описание'}, 400
+    if not film.get('title_ru'):
+        errors['title_ru'] = 'Русское название не может быть пустым'
 
-    if not film.get('title') and film.get('title_ru'):
-         film['title'] = film['title_ru']
+    if not film.get('title'):
+        if film.get('title_ru'):
+            film['title'] = film['title_ru']
+        else:
+             errors['title'] = 'Укажите оригинальное или русское название'
 
-    films.append(film)
+    current_year = datetime.datetime.now().year
+    year = film.get('year')
+    if not year:
+        errors['year'] = 'Укажите год'
+    elif not (1895 <= int(year) <= current_year):
+        errors['year'] = f'Год должен быть от 1895 до {current_year}'
+
+    description = film.get('description')
+    if not description:
+        errors['description'] = 'Заполните описание'
+    elif len(description) > 2000:
+        errors['description'] = 'Описание не должно превышать 2000 символов'
+
+    if errors:
+        return errors, 400
+
+    conn, cur = db_connect()
+    cur.execute('''
+        INSERT INTO films (title, title_ru, year, description)
+        VALUES (?, ?, ?, ?)
+    ''', (film['title'], film['title_ru'], film['year'], film['description']))
+    
+    new_id = cur.lastrowid
+    db_close(conn, cur)
+    
+    film['id'] = new_id
     return jsonify(film)
