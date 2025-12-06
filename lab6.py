@@ -8,7 +8,8 @@ def db_connect():
     dir_path = path.dirname(path.realpath(__file__))
     db_path = path.join(dir_path, "database.db")
     conn = sqlite3.connect(db_path)
-    conn.row_factory = sqlite3.Row
+    conn.row_factory = lambda cursor, row: dict(row)
+
     cur = conn.cursor()
     return conn, cur
 

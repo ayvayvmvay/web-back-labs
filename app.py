@@ -9,6 +9,8 @@ from lab5 import lab5
 from lab6 import lab6
 import os
 from rgz import rgz
+from lab7 import lab7
+
 
 
 
@@ -22,6 +24,8 @@ app.register_blueprint(lab3)
 app.register_blueprint(lab4)
 app.register_blueprint(lab5)
 app.register_blueprint(lab6)
+app.register_blueprint(lab7)
+
 app.register_blueprint(rgz)
 
 
@@ -45,6 +49,11 @@ def index():
                 <li><a href="/lab4">Четвертая лабораторная</a></li>
                 <li><a href="/lab5">Пятая лабораторная</a></li>
                 <li><a href="/lab6">Шестая лабораторная</a></li>
+
+                <li><a href="/lab7">Седьмая лабораторная</a></li>
+                <li><a href="/lab7">Восьмая лабораторная</a></li>
+
+                
                 <li><a href="/rgz">Ргз</a></li>
 
 
