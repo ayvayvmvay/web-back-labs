@@ -122,8 +122,6 @@ def not_found(err):
 
 
 
-
-
 @app.errorhandler(500)
 def handle_500(err):
     return '''<!doctype html>

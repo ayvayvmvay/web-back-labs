@@ -14,7 +14,7 @@ except ImportError:
 lab5 = Blueprint('lab5', __name__)
 
 def db_connect():
-    """Подключение к базе данных (Postgres или SQLite)"""
+
     if current_app.config['DB_TYPE'] == 'postgres':
         if psycopg2 is None:
             raise ImportError("Для работы с Postgres нужен модуль psycopg2")
@@ -191,5 +191,129 @@ def list():
     db_close(conn, cur)
     return render_template('lab5/articles.html', articles=articles)
 
-# Остальные методы (delete, edit) у тебя были написаны,
-# добавь их сюда, если они нужны, по аналогии с list и create
+@lab5.route('/lab5/edit/<int:article_id>', methods=['GET', 'POST'])
+def edit_article(article_id):
+    login = session.get('login')
+    if not login:
+        return redirect('/lab5/login')
+
+    conn, cur = db_connect()
+
+    if current_app.config['DB_TYPE'] == 'postgres':
+        cur.execute("SELECT id FROM users WHERE login=%s;", (login,))
+    else:
+        cur.execute("SELECT id FROM users WHERE login=?;", (login,))
+    user = cur.fetchone()
+
+    # Проверяем, принадлежит ли статья пользователю
+    if current_app.config['DB_TYPE'] == 'postgres':
+        cur.execute("SELECT * FROM articles WHERE id=%s AND user_id=%s;", (article_id, user['id']))
+    else:
+        cur.execute("SELECT * FROM articles WHERE id=? AND user_id=?;", (article_id, user['id']))
+
+    article = cur.fetchone()
+    if not article:
+        db_close(conn, cur)
+        return redirect('/lab5/list')
+
+    if request.method == 'GET':
+        db_close(conn, cur)
+        return render_template('lab5/edit_article.html', article=article)
+
+    title = request.form.get('title', '').strip()
+    article_text = request.form.get('article_text', '').strip()
+
+    if not title or not article_text:
+        db_close(conn, cur)
+        return render_template('lab5/edit_article.html', article=article, error='Нельзя сохранить пустую статью')
+
+    if current_app.config['DB_TYPE'] == 'postgres':
+        cur.execute("UPDATE articles SET title=%s, article_text=%s WHERE id=%s;", (title, article_text, article_id))
+    else:
+        cur.execute("UPDATE articles SET title=?, article_text=? WHERE id=?;", (title, article_text, article_id))
+
+    db_close(conn, cur)
+    return redirect('/lab5/list')
+
+@lab5.route('/lab5/delete/<int:article_id>', methods=['POST'])
+def delete_article(article_id):
+    login = session.get('login')
+    if not login:
+        return redirect('/lab5/login')
+
+    conn, cur = db_connect()
+
+    if current_app.config['DB_TYPE'] == 'postgres':
+        cur.execute("SELECT id FROM users WHERE login=%s;", (login,))
+    else:
+        cur.execute("SELECT id FROM users WHERE login=?;", (login,))
+    user = cur.fetchone()
+
+    # Удаляем только если статья принадлежит юзеру
+    if current_app.config['DB_TYPE'] == 'postgres':
+        cur.execute("DELETE FROM articles WHERE id=%s AND user_id=%s;", (article_id, user['id']))
+    else:
+        cur.execute("DELETE FROM articles WHERE id=? AND user_id=?;", (article_id, user['id']))
+    
+    db_close(conn, cur)
+    return redirect('/lab5/list')
+
+
+
+
+@lab5.route('/lab5/profile', methods=['GET', 'POST'])
+def profile():
+    login = session.get('login')
+    if not login:
+        return redirect('/lab5/login')
+
+    conn, cur = db_connect()
+
+    # Получаем данные пользователя
+    if current_app.config['DB_TYPE'] == 'postgres':
+        cur.execute("SELECT * FROM users WHERE login=%s;", (login,))
+    else:
+        cur.execute("SELECT * FROM users WHERE login=?;", (login,))
+    
+    user = cur.fetchone()
+
+    if request.method == 'GET':
+        db_close(conn, cur)
+        return render_template('lab5/profile.html', user=user)
+
+    # Обработка POST запроса (обновление данных)
+    name = request.form.get('name')
+    password = request.form.get('password')
+    password_confirm = request.form.get('password_confirm')
+
+    if password: 
+        # Если пользователь хочет сменить пароль
+        if password != password_confirm:
+             db_close(conn, cur)
+             return render_template('lab5/profile.html', user=user, error="Пароли не совпадают")
+        
+        password_hash = generate_password_hash(password)
+        
+        if current_app.config['DB_TYPE'] == 'postgres':
+            cur.execute("UPDATE users SET name=%s, password=%s WHERE login=%s;", (name, password_hash, login))
+        else:
+            cur.execute("UPDATE users SET name=?, password=? WHERE login=?;", (name, password_hash, login))
+    else:
+        # Если меняем только имя
+        if current_app.config['DB_TYPE'] == 'postgres':
+            cur.execute("UPDATE users SET name=%s WHERE login=%s;", (name, login))
+        else:
+            cur.execute("UPDATE users SET name=? WHERE login=?;", (name, login))
+
+    db_close(conn, cur)
+    return redirect('/lab5/profile')
+
+@lab5.route('/lab5/users')
+def users_list():
+    conn, cur = db_connect()
+    
+    cur.execute("SELECT login, name FROM users;")
+    users = cur.fetchall()
+    
+    db_close(conn, cur)
+    return render_template('lab5/users.html', users=users)
