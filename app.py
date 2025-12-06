@@ -12,7 +12,9 @@ from rgz import rgz
 from lab7 import lab7
 from lab8 import lab8
 
-
+from flask_sqlalchemy import SQLAlchemy
+from lab8_db import db
+from os import path
 
 
 
