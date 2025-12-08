@@ -2,8 +2,114 @@
 
 {% block lab %}Лабораторная работа 9{% endblock %}
 
-{% block script %}{% endblock %}
+{% block script %}
+<style>
+    .gift-container {
+        position: relative;
+        width: 800px;
+        height: 500px;
+        background-color: #f0f8ff;
+        border: 2px solid #87ceeb;
+        margin: 20px auto;
+        border-radius: 10px;
+    }
+    
+    .gift-box {
+        position: absolute;
+        width: 64px;
+        height: 64px;
+        cursor: pointer;
+        transition: transform 0.2s;
+        text-align: center;
+    }
+    
+    .gift-box:hover {
+        transform: scale(1.1);
+    }
+
+    .gift-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+    
+    /* Стиль для текста поздравления */
+    .message {
+        position: absolute;
+        bottom: -25px; /* Сдвигаем текст чуть ниже картинки */
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 11px;
+        font-weight: bold;
+        color: #fff;
+        background: #007bff; /* Синяя плашка */
+        padding: 2px 6px;
+        border-radius: 4px;
+        white-space: nowrap;
+        z-index: 100;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+</style>
+
+<script>
+    function openGift(id) {
+        const formData = new FormData();
+        formData.append('gift_id', id);
+
+        fetch('/lab9/open', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                const box = document.getElementById('gift-' + id);
+                
+                // Просто добавляем текст поздравления, картинку не меняем
+                const msgDiv = document.createElement('div');
+                msgDiv.className = 'message';
+                msgDiv.innerText = data.message;
+                box.appendChild(msgDiv);
+                
+                // Обновляем счетчик
+                document.getElementById('counter').innerText = data.count;
+                
+            } else if (data.status === 'already_open') {
+                alert("Этот подарок уже открыт!");
+            } else if (data.status === 'limit') {
+                alert("Вы уже открыли 3 подарка!");
+            }
+        });
+    }
+</script>
+{% endblock %}
 
 {% block main %}
-    <h1>Поздравления</h1>
+    <div style="text-align: center;">
+        <h1>Новогодние подарки</h1>
+        <p>Открыто: <span id="counter">{{ count }}</span> из 3</p>
+        <p><small>Нажмите на картинку, чтобы увидеть пожелание</small></p>
+    </div>
+
+    <div class="gift-container">
+        {% for gift in gifts %}
+            <div id="gift-{{ gift.id }}" class="gift-box" 
+                 style="left: {{ gift.x }}px; top: {{ gift.y }}px;"
+                 onclick="openGift({{ gift.id }})">
+                
+                <!-- Сразу показываем твою картинку -->
+                <img src="{{ url_for('static', filename='lab9/' + gift.image) }}" alt="gift">
+                
+                <!-- Если подарок уже был открыт раньше (до перезагрузки), сразу показываем текст -->
+                {% if gift.open %}
+                    <div class="message">{{ gift.message }}</div>
+                {% endif %}
+                
+            </div>
+        {% endfor %}
+    </div>
+    
+    <div style="text-align: center; margin-top: 20px;">
+        <a href="/lab9/reset" style="color: red;">Сбросить всё</a>
+    </div>
 {% endblock %}
